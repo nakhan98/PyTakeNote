@@ -84,7 +84,7 @@ def print_all_notes():
     print("-" * 72)
     for note in notes:
         print("%-3d %-48s %-16s" % (note[0], note[1], note[3]))
-    print("\n")
+    #print("\n")
 
 
 def get_title():
@@ -186,6 +186,20 @@ def edit_note(id_):
     conn.close()
 
 
+def show_note(id_):
+    conn, c = dbconn(db_filepath)
+    notes = c.execute("SELECT title, body FROM Notes WHERE id=?", (id_,))
+    notes = notes.fetchall()
+    conn.close()
+    if not notes:
+        print("No note exists by that ID")
+        sys.exit(2)
+    note = notes[0]
+    title, body, = note
+    print("Title: %s" % title)
+    print("Body: %s" % body)
+
+
 def main():
     search_db_file()
 
@@ -234,6 +248,17 @@ def main():
             print("Error... The ID is an integer")
         else:
             edit_note(id_to_edit)
+    elif sys.argv[1].upper() == "SHOW":
+        if len(sys.argv) != 3:
+            print("Error... To edit a note please specify note ID")
+            print("e.g. - 'edit 2'")
+            sys.exit(2)
+        try:
+            id_to_show = int(sys.argv[2])
+        except:
+            print("Error... The ID is an integer")
+        else:
+            show_note(id_to_show)
 
 
 if __name__ == "__main__":
