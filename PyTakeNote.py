@@ -39,7 +39,7 @@ def dbconn(db_filepath):
 
 
 def ask_db_location():
-    print("Where do you wish to save the database file?")
+    print("\nWhere do you wish to save the database file?")
     print("1 - Same location as Python script (%s)" % file_location)
     print("2 - Your home Directory (%s)" % os.getenv("HOME"))
     print("")
