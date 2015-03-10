@@ -45,10 +45,12 @@ def ask_db_location():
     print("")
     chosen = 0
     while not chosen:
-        choice = input("> ") 
+        choice = input(">> ") 
         choice = choice.strip()
         if choice in ("1", "2"):
             chosen = 1
+        else:
+            print("Enter 1 or 2\n")
     choice = int(choice)
     return ["./"+db_name, os.getenv("HOME") + "/" +  db_name][choice-1]
 
@@ -186,7 +188,8 @@ def main():
     if not os.path.isfile(db_filepath):
         print("Creating notetaker Database...")
         if create_db():
-            print("Database created succesfully")
+            print("Database created succesfully.\n")
+            main()
             sys.exit(0)
         else:
             print("Database could not be created...")
