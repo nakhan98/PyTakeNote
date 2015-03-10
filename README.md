@@ -4,13 +4,13 @@
 
 ## Instrunctions
 - List all notes:
-    ./PyTakeNote.py
+    ./pytakenote.py
 - Add a Note:
-    ./PyTakeNote.py add
+    ./pytakenote.py add
 - Edit a Note:
-    ./PyTakeNote edit [Note ID]
+    ./pytakenote.py edit [Note ID]
 - Delete a Note:
-    ./PyTakeNote delete [Note ID]
+    ./pytakenote.py delete [Note ID]
 
 ## Todos
 - Categories

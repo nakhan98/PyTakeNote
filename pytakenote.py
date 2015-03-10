@@ -76,9 +76,13 @@ def create_db():
 def print_all_notes():
     conn, c = dbconn(db_filepath)
     results = c.execute("SELECT id, title, body, datetime FROM Notes;")
+    notes = results.fetchall()
+    if not notes:
+        print("No notes saved")
+        sys.exit(0)
     print("%-3s %-48s %-16s" % ("ID", "Title", "Date"))
     print("-" * 72)
-    for note in results:
+    for note in notes:
         print("%-3d %-48s %-16s" % (note[0], note[1], note[3]))
     print("\n")
 
