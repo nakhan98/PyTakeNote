@@ -15,4 +15,4 @@
 ## Todos
 - Categories
 - Simple Encryption?
-- System-wide installation?
+- System-wide installation script?
