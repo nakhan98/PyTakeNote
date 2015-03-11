@@ -14,5 +14,6 @@
 
 ## Todos
 - Categories
+- Use argparse as current arg handling is fugly
 - Simple Encryption?
 - System-wide installation script?
