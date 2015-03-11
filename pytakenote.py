@@ -20,7 +20,7 @@ from datetime import datetime
 from subprocess import call
 
 db_filepath = ""
-db_name = ".notetaker.db"
+db_name = ".pytakenote.db"
 file_location = os.path.dirname(os.path.abspath(__file__))
 
 
