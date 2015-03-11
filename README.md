@@ -5,12 +5,14 @@
 ## Instructions
 - List all notes:
     ./pytakenote.py
-- Add a Note:
+- Add a note:
     ./pytakenote.py add
-- Edit a Note:
+- Show a note
+    ./pytakenote.py show [Note ID]
+- Edit a note:
     ./pytakenote.py edit [Note ID]
-- Delete a Note:
-    ./pytakenote.py delete [Note ID]
+- Delete a note:
+    ./pytakenote.py del/delete [Note ID]
 
 ## Todos
 - Categories
