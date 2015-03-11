@@ -2,7 +2,7 @@
 - A simple CLI notetaking app written in Python 3
 - Needed an upgrade from my notes.txt file
 
-## Instrunctions
+## Instructions
 - List all notes:
     ./pytakenote.py
 - Add a Note:
