@@ -56,7 +56,6 @@ def ask_db_location():
 
 
 def create_db():
-    #pdb.set_trace()
     filepath = ask_db_location()
     create_table_sql = "CREATE TABLE Notes (id INTEGER PRIMARY KEY, title TEXT, body TEXT, datetime DATETIME);"
     conn, c = dbconn(filepath)
@@ -102,7 +101,7 @@ def get_body():
     else:
         call(["nano", tf.name])
     with open(tf.name, "rt") as f:
-        body = f.read()
+        body = f.read().rstrip()
     os.unlink(tf.name)
     return body
 
@@ -178,7 +177,7 @@ def edit_note(id_):
         call(["nano", tf.name])
 
     with open(tf.name, "rt") as f:
-        body = f.read()
+        body = f.read().rstrip()
     os.unlink(tf.name)
 
     c.execute("UPDATE Notes SET title=?, body=? WHERE id=?", (title, body, id_))
