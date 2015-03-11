@@ -227,8 +227,8 @@ def main():
             add_note(title=title, body=body)
     elif sys.argv[1].upper() in ("DEL", "DELETE"):
         if len(sys.argv) != 3:
-            print("Error... To delete please specify note ID")
-            print("e.g. - './pytakenote delete 2'")
+            print("Error... To delete a note please specify note ID. For example:")
+            print("./pytakenote.py delete 2")
             sys.exit(2)
         try:
             id_to_delete = int(sys.argv[2])
@@ -239,7 +239,7 @@ def main():
     elif sys.argv[1].upper() == "EDIT":
         if len(sys.argv) != 3:
             print("Error... To edit a note please specify note ID. For example:")
-            print("./pytakenote edit 2")
+            print("./pytakenote.py edit 2")
             sys.exit(2)
         try:
             id_to_edit = int(sys.argv[2])
@@ -250,7 +250,7 @@ def main():
     elif sys.argv[1].upper() == "SHOW":
         if len(sys.argv) != 3:
             print("Error... To show a note please specify note ID. For example:")
-            print("./pytakenote show 2")
+            print("./pytakenote.py show 2")
             sys.exit(2)
         try:
             id_to_show = int(sys.argv[2])
