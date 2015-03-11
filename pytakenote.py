@@ -3,7 +3,7 @@
 '''
 # PyTakeNote #
 - A simple CLI notetaking app written in Python 3
-- Needed an upgrade from my note.txt file
+- Needed an upgrade from my notes.txt file
 '''
 
 __author__ = "Nasef Khan (inbox@nakhan.net)"
