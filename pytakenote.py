@@ -238,19 +238,19 @@ def main():
             delete_note(id_to_delete)
     elif sys.argv[1].upper() == "EDIT":
         if len(sys.argv) != 3:
-            print("Error... To edit a note please specify note ID")
-            print("e.g. - './pytakenote edit 2'")
+            print("Error... To edit a note please specify note ID. For example:")
+            print("./pytakenote edit 2")
             sys.exit(2)
         try:
             id_to_edit = int(sys.argv[2])
         except:
-            print("Error... The ID is an integer")
+            print("Error... Please enter an integer")
         else:
             edit_note(id_to_edit)
     elif sys.argv[1].upper() == "SHOW":
         if len(sys.argv) != 3:
-            print("Error... To show a note please specify note ID")
-            print("e.g. - './pytakenote show 2'")
+            print("Error... To show a note please specify note ID. For example:")
+            print("./pytakenote show 2")
             sys.exit(2)
         try:
             id_to_show = int(sys.argv[2])
