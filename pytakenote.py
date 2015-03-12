@@ -7,7 +7,7 @@
 '''
 
 __author__ = "Nasef Khan (inbox@nakhan.net)"
-__license__ = 'GPL3' # see http://www.gnu.org/licenses/gpl.html'
+__license__ = 'GPL3' # see http://www.gnu.org/licenses/gpl.html
 __version__ = "0.1.0" 
 
 
