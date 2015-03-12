@@ -86,11 +86,6 @@ def print_all_notes():
     #print("\n")
 
 
-def get_title(prompt):
-    title = input(prompt)
-    return title
-
-
 def get_body():
     tf = tempfile.NamedTemporaryFile(delete=False)
     tf.write("Enter you note here... (you can delete this line)".encode())
@@ -161,7 +156,7 @@ def edit_note(id_):
         sys.exit(2)
     note = notes[0]
     title, body, = note
-    _ = get_title("Edit title [%s]? " % title)
+    _ = input("Edit title [%s]? " % title)
     _ = _.strip()
     if _ != "":
         title = _
@@ -218,7 +213,7 @@ def main():
         
 
     if sys.argv[1].upper() == "ADD":
-        title = get_title("Please enter a title: ")
+        title = input("Please enter a title: ")
         body = get_body()
         deleted_key = get_unused_key()
         if deleted_key:
