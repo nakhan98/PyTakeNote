@@ -8,11 +8,10 @@
 
 __author__ = "Nasef Khan (inbox@nakhan.net)"
 __license__ = 'GPL3' # see http://www.gnu.org/licenses/gpl.html
-__version__ = "0.1.0" 
-
+__version__ = "0.2.0" 
 
 import sys
-#import pdb
+import pdb
 import sqlite3
 import tempfile
 import os
@@ -22,6 +21,96 @@ from subprocess import call
 db_filepath = ""
 db_name = ".pytakenote.db"
 file_location = os.path.dirname(os.path.abspath(__file__))
+
+class Note:
+    def __init__(self, id_=None):
+        if id_: # load note from db if note id id_ exists
+            self.load(id_)
+        else:
+            self.create_new()
+
+    def create_new(self):
+        self.id_ = get_unused_key() # to re-use deleted ids
+        self.title = input("Please enter a title: ")
+        self.body = get_body()
+        self.date_time = get_current_datetime()
+        self.save_to_db()
+
+    def load(self, id_):
+        '''load note from db'''
+        conn, c = dbconn(db_filepath)
+        sql = "SELECT id, title, body FROM Notes WHERE id=?"
+        data = c.execute(sql, (id_)).fetchone()
+        conn.close()
+        if data:
+            self.id_, self.title, self.body = data
+        else:
+            print("No note exists with that ID")
+            sys.exit(1)
+
+    def edit(self):
+        _ = input("Edit title [%s]? " % self.title)
+        _ = _.strip()
+        if _ != "":
+            self.title = _
+        self.body = get_body(self.body)
+        self.date_time = get_current_datetime()
+        self.save_to_db()
+    
+    def delete(self):
+        conn, c = dbconn(db_filepath)
+        sql = "DELETE FROM Notes WHERE id=?"
+        c.execute(sql, (self.id_,))
+        conn.commit()
+        conn.close()
+
+    def check_note(self, id_):
+        ''' Check if any data exists at id id_ in table'''
+        #pdb.set_trace()
+        conn, c = dbconn(db_filepath)
+        sql = "SELECT id FROM Notes WHERE id=?"
+        result = c.execute(sql, (id_,)).fetchone()
+        conn.close()
+        if result:
+            return True
+        else:
+            return False
+
+    def print_(self):
+        print("Title: %s" % self.title)
+        print("Body: %s" % self.body)
+
+    def save_to_db(self):
+        conn, c = dbconn(db_filepath)
+        if self.id_:
+            if self.check_note(self.id_): # note being edited
+                sql = "UPDATE Notes SET title=?, body=?, datetime=? WHERE id=?"
+                c.execute(sql, (self.title, self.body, self.date_time, self.id_))
+            else: # new note being saved as lowest deleted id
+                sql = "INSERT INTO Notes(id, title, body, datetime) values(?, ?, ?, ?)"
+                c.execute(sql, (self.id_, self.title, self.body, self.date_time))
+        else:
+            sql = "INSERT INTO Notes(title, body, datetime) values(?, ?, ?)"
+            c.execute(sql, (self.title, self.body, self.date_time))
+        conn.commit()
+        conn.close()
+
+    def print_all_notes():
+        conn, c = dbconn(db_filepath)
+        results = c.execute("SELECT id, title, body, datetime FROM Notes;")
+        notes = results.fetchall()
+        if not notes:
+            print("No notes saved")
+            sys.exit(0)
+        print("%-3s %-48s %-16s" % ("ID", "Title", "Date"))
+        print("-" * 72)
+        for note in notes:
+            print("%-3d %-48s %-16s" % (note[0], note[1], note[3]))
+        #print("\n")
+
+
+def get_current_datetime():
+   return str( datetime.now() )[:-7]
 
 
 def search_db_file():
@@ -72,29 +161,21 @@ def create_db():
         return True
 
 
-def print_all_notes():
-    conn, c = dbconn(db_filepath)
-    results = c.execute("SELECT id, title, body, datetime FROM Notes;")
-    notes = results.fetchall()
-    if not notes:
-        print("No notes saved")
-        sys.exit(0)
-    print("%-3s %-48s %-16s" % ("ID", "Title", "Date"))
-    print("-" * 72)
-    for note in notes:
-        print("%-3d %-48s %-16s" % (note[0], note[1], note[3]))
-    #print("\n")
-
-
-def get_body():
-    tf = tempfile.NamedTemporaryFile(delete=False)
-    tf.write("Enter you note here... (you can delete this line)".encode())
-    tf.close()
+def open_editor(filepath):
     editor = os.getenv("EDITOR")
     if editor:
-        call([editor, tf.name])
+        call([editor, filepath])
     else:
-        call(["nano", tf.name])
+        call(["nano", filepath])
+
+
+def get_body(content=None):
+    if not content:
+        content = "Enter you note here... (you can delete this line)"
+    tf = tempfile.NamedTemporaryFile(delete=False)
+    tf.write(content.encode())
+    tf.close()
+    open_editor(tf.name)
     with open(tf.name, "rt") as f:
         body = f.read().rstrip()
     os.unlink(tf.name)
@@ -115,85 +196,6 @@ def get_unused_key():
         return del_keys[0]
 
 
-def add_note( id_=None, title="", body="", current_datetime = str(datetime.now())[:-7] ):
-    conn, c = dbconn(db_filepath)
-    if id_:
-        sql = "INSERT INTO Notes(id, title, body, datetime) values(?, ?, ?, ?)"
-        c.execute(sql, (id_, title, body, current_datetime))
-    else:
-        sql = "INSERT INTO Notes(title, body, datetime) values(?, ?, ?)"
-        c.execute(sql, (title, body, current_datetime))
-    conn.commit()
-    conn.close()
-
-
-def delete_note(id_):
-    conn, c = dbconn(db_filepath)
-    note = c.execute("SELECT * FROM Notes WHERE id=?", (id_,))
-    note = note.fetchall()
-    if not note:
-        print("No note exists by that ID")
-        sys.exit(2)
-
-    try:
-        sql = "DELETE FROM Notes WHERE id=?"
-        c.execute(sql, (id_,))
-    except Exception as err:
-        print("Error: " + str(err))
-    finally:
-        print("Note deleted")
-        conn.commit()
-        conn.close()
-    
-
-def edit_note(id_):
-    conn, c = dbconn(db_filepath)
-    notes = c.execute("SELECT title, body FROM Notes WHERE id=?", (id_,))
-    notes = notes.fetchall()
-    if not notes:
-        print("No note exists by that ID")
-        conn.close()
-        sys.exit(2)
-    note = notes[0]
-    title, body, = note
-    _ = input("Edit title [%s]? " % title)
-    _ = _.strip()
-    if _ != "":
-        title = _
-    print(title)
-    tf = tempfile.NamedTemporaryFile(delete=False)
-    body_bytes = body.encode()
-    tf.write(body_bytes)
-    tf.close()
-    editor = os.getenv("EDITOR")
-    if editor:
-        call([editor, tf.name])
-    else:
-        call(["nano", tf.name])
-
-    with open(tf.name, "rt") as f:
-        body = f.read().rstrip()
-    os.unlink(tf.name)
-
-    c.execute("UPDATE Notes SET title=?, body=? WHERE id=?", (title, body, id_))
-    conn.commit()
-    conn.close()
-
-
-def show_note(id_):
-    conn, c = dbconn(db_filepath)
-    notes = c.execute("SELECT title, body FROM Notes WHERE id=?", (id_,))
-    notes = notes.fetchall()
-    conn.close()
-    if not notes:
-        print("No note exists by that ID")
-        sys.exit(2)
-    note = notes[0]
-    title, body, = note
-    print("Title: %s" % title)
-    print("Body: %s" % body)
-
-
 def main():
     search_db_file()
 
@@ -208,52 +210,35 @@ def main():
             sys.exit(1)
 
     if len(sys.argv) == 1:
-        print_all_notes()
+        Note.print_all_notes()
         sys.exit(0)
         
 
     if sys.argv[1].upper() == "ADD":
-        title = input("Please enter a title: ")
-        body = get_body()
-        deleted_key = get_unused_key()
-        if deleted_key:
-            add_note(id_=deleted_key, title=title, body=body)
-        else:
-            add_note(title=title, body=body)
+        new_note = Note()
     elif sys.argv[1].upper() in ("DEL", "DELETE"):
         if len(sys.argv) != 3:
             print("Error... To delete a note please specify note ID. For example:")
             print("./pytakenote.py delete 2")
             sys.exit(2)
-        try:
-            id_to_delete = int(sys.argv[2])
-        except:
-            print("Error... The ID is an integer")
-        else:
-            delete_note(id_to_delete)
+        note = Note(sys.argv[2])
+        note.delete()
     elif sys.argv[1].upper() == "EDIT":
         if len(sys.argv) != 3:
             print("Error... To edit a note please specify note ID. For example:")
             print("./pytakenote.py edit 2")
             sys.exit(2)
-        try:
-            id_to_edit = int(sys.argv[2])
-        except:
-            print("Error... Please enter an integer")
-        else:
-            edit_note(id_to_edit)
+        note  = Note(sys.argv[2])
+        note.edit()
     elif sys.argv[1].upper() == "SHOW":
         if len(sys.argv) != 3:
             print("Error... To show a note please specify note ID. For example:")
             print("./pytakenote.py show 2")
             sys.exit(2)
-        try:
-            id_to_show = int(sys.argv[2])
-        except:
-            print("Error... Please enter an integer")
-        else:
-            show_note(id_to_show)
-
+        note = Note(sys.argv[2])
+        note.print_()
+    else:
+        print("Whaaaat?")
 
 if __name__ == "__main__":
     main()
