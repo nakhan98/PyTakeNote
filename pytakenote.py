@@ -99,6 +99,7 @@ class Note:
         conn, c = dbconn(db_filepath)
         results = c.execute("SELECT id, title, body, datetime FROM Notes;")
         notes = results.fetchall()
+        conn.close()
         if not notes:
             print("No notes saved")
             sys.exit(0)
