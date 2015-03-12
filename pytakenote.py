@@ -11,7 +11,7 @@ __license__ = 'GPL3' # see http://www.gnu.org/licenses/gpl.html
 __version__ = "0.2.0" 
 
 import sys
-import pdb
+#import pdb
 import sqlite3
 import tempfile
 import os
