@@ -1,5 +1,5 @@
 # PyTakeNote #
-- A simple CLI notetaking app written in Python 3
+- A simple CLI notetaking app written in Python 3 and SQLite
 - Needed an upgrade from my notes.txt file
 
 ## Instructions
