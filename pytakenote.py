@@ -18,6 +18,8 @@ import os
 from datetime import datetime
 from subprocess import call
 
+#pdb.set_trace()
+
 db_filepath = ""
 db_name = ".pytakenote.db"
 file_location = os.path.dirname(os.path.abspath(__file__))
@@ -122,8 +124,8 @@ def search_db_file():
         db_filepath = os.getenv("HOME") + "/" + db_name
 
 
-def dbconn(db_filepath):
-    conn = sqlite3.connect(db_filepath)
+def dbconn(sqlite_file=db_filepath):
+    conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
     return (conn, c)
 
@@ -145,8 +147,9 @@ def ask_db_location():
     return ["./"+db_name, os.getenv("HOME") + "/" +  db_name][choice-1]
 
 
-def create_db():
-    filepath = ask_db_location()
+def create_db(filepath=None):
+    if not filepath:
+        filepath = ask_db_location()
     create_table_sql = "CREATE TABLE Notes (id INTEGER PRIMARY KEY, title TEXT, body TEXT, datetime DATETIME);"
     conn, c = dbconn(filepath)
     try:
