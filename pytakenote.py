@@ -108,12 +108,19 @@ class Note:
         print("%-3s %-48s %-16s" % ("ID", "Title", "Date"))
         print("-" * 72)
         for note in notes:
-            print("%-3d %-48s %-16s" % (note[0], note[1], note[3]))
+            print("%-3d %-48s %-16s" % (note[0], shorten_string(note[1]), note[3]))
         #print("\n")
 
 
 def get_current_datetime():
    return str( datetime.now() )[:-7]
+
+
+def shorten_string(string):
+    ''' To stop titles overrunning'''
+    if len(string) > 49:
+        string = string[:45] + "..."
+    return string 
 
 
 def search_db_file():
