@@ -20,7 +20,7 @@ from subprocess import call
 
 #pdb.set_trace()
 
-db_filepath = ""
+#db_filepath = ""
 db_name = ".pytakenote.db"
 file_location = os.path.dirname(os.path.abspath(__file__))
 
@@ -40,7 +40,7 @@ class Note:
 
     def load(self, id_):
         '''load note from db'''
-        conn, c = dbconn(db_filepath)
+        conn, c = dbconn()
         sql = "SELECT id, title, body FROM Notes WHERE id=?"
         data = c.execute(sql, (id_)).fetchone()
         conn.close()
@@ -60,7 +60,7 @@ class Note:
         self.save_to_db()
     
     def delete(self):
-        conn, c = dbconn(db_filepath)
+        conn, c = dbconn()
         sql = "DELETE FROM Notes WHERE id=?"
         c.execute(sql, (self.id_,))
         conn.commit()
@@ -69,7 +69,7 @@ class Note:
     def check_note(self, id_):
         ''' Check if any data exists at id id_ in table'''
         #pdb.set_trace()
-        conn, c = dbconn(db_filepath)
+        conn, c = dbconn()
         sql = "SELECT id FROM Notes WHERE id=?"
         result = c.execute(sql, (id_,)).fetchone()
         conn.close()
@@ -83,7 +83,7 @@ class Note:
         print("Body: %s" % self.body)
 
     def save_to_db(self):
-        conn, c = dbconn(db_filepath)
+        conn, c = dbconn()
         if self.id_:
             if self.check_note(self.id_): # note being edited
                 sql = "UPDATE Notes SET title=?, body=?, datetime=? WHERE id=?"
@@ -98,7 +98,7 @@ class Note:
         conn.close()
 
     def print_all_notes():
-        conn, c = dbconn(db_filepath)
+        conn, c = dbconn()
         results = c.execute("SELECT id, title, body, datetime FROM Notes;")
         notes = results.fetchall()
         conn.close()
@@ -117,27 +117,34 @@ def get_current_datetime():
 
 
 def search_db_file():
-    global db_filepath
     if os.path.isfile("./"+db_name):
         db_filepath = "./"+db_name
+        return db_filepath
     elif os.path.isfile( os.getenv("HOME") + "/" + db_name ):
         db_filepath = os.getenv("HOME") + "/" + db_name
+        return db_filepath
 
 
-def dbconn(sqlite_file=db_filepath):
+def dbconn(sqlite_file=None):
+    if not sqlite_file:
+        sqlite_file=search_db_file()
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
     return (conn, c)
 
 
-def ask_db_location():
+def user_input():
+    return input(">> ")
+
+
+def ask_db_location(user_input):
     print("\nWhere do you wish to save the database file?")
     print("1 - Same location as Python script (%s)" % file_location)
     print("2 - Your home Directory (%s)" % os.getenv("HOME"))
     print("")
     chosen = 0
     while not chosen:
-        choice = input(">> ") 
+        choice = user_input()
         choice = choice.strip()
         if choice in ("1", "2"):
             chosen = 1
@@ -149,7 +156,7 @@ def ask_db_location():
 
 def create_db(filepath=None):
     if not filepath:
-        filepath = ask_db_location()
+        filepath = ask_db_location(user_input)
     create_table_sql = "CREATE TABLE Notes (id INTEGER PRIMARY KEY, title TEXT, body TEXT, datetime DATETIME);"
     conn, c = dbconn(filepath)
     try:
@@ -188,7 +195,7 @@ def get_body(content=None):
 
 def get_unused_key():
     '''Reuse deleted keys'''
-    conn, c = dbconn(db_filepath)
+    conn, c = dbconn()
     sql = "SELECT id FROM Notes ORDER BY id ASC ";
     results = c.execute(sql)
     keys = [int(i[0]) for i in results.fetchall()]
@@ -201,9 +208,8 @@ def get_unused_key():
 
 
 def main():
-    search_db_file()
 
-    if not os.path.isfile(db_filepath):
+    if not search_db_file():
         print("Creating notetaker Database...")
         if create_db():
             print("Database created succesfully.\n")
