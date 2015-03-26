@@ -20,6 +20,7 @@
 
 ## Todos
 - Categories
+- Search
 - <del>Use argparse as current arg handling is fugly</del>
 - Simple Encryption?
 - System-wide installation script?
