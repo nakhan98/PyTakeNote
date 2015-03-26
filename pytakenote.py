@@ -6,9 +6,10 @@
 - Needed an upgrade from my notes.txt file
 '''
 
+__title__ = "PyTakeNote"
+__version__ = "0.3.1" 
 __author__ = "Nasef Khan (inbox@nakhan.net)"
 __license__ = 'GPL3' # see http://www.gnu.org/licenses/gpl.html
-__version__ = "0.3.0" 
 
 import sys
 import sqlite3
@@ -17,7 +18,6 @@ import os
 import argparse
 from datetime import datetime
 from subprocess import call
-import ipdb
 
 db_name = ".pytakenote.db"
 
@@ -190,7 +190,7 @@ def get_unused_key(db):
 
 
 def main(argv):
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(prog=__title__, description=__doc__)
     group = parser.add_mutually_exclusive_group()
 
     parser.add_argument("-c", "--db", "--config", type=str,  
@@ -206,6 +206,7 @@ def main(argv):
             help="Edit a note (specify an ID)")
     group.add_argument("-s", "--show", type=int, 
             help="Show a note (specify an ID)")
+    parser.add_argument("-V", '--version', action='version', version='%(prog)s ' + __version__)
 
     args = parser.parse_args(argv)
 
