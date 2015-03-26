@@ -15,9 +15,11 @@
     ./pytakenote.py -e [Note ID]
 - Delete a note:
     ./pytakenote.py -d [Note ID]
+- Specify another db file to use (will create if necessary):
+    ./pytakenote -c ~/Dropbox/.my_notes.db
 
 ## Todos
 - Categories
 - <del>Use argparse as current arg handling is fugly</del>
 - Simple Encryption?
-- System-wide installation script? (I use a bash alias to easily run the script)
+- System-wide installation script?
