@@ -4,23 +4,23 @@
 
 ## Instructions
 - Help:
-    ./pytakenote.py -h
+    pytakenote -h
 - List all notes:
-    ./pytakenote.py
+    pytakenote
 - Add a note:
-    ./pytakenote.py -a 
+    pytakenote -a 
 - Show a note
-    ./pytakenote.py -s [Note ID]
+    pytakenote -s [Note ID]
 - Edit a note:
-    ./pytakenote.py -e [Note ID]
+    pytakenote -e [Note ID]
 - Delete a note:
-    ./pytakenote.py -d [Note ID]
+    pytakenote -d [Note ID]
 - Specify another db file to use (will create if necessary):
-    ./pytakenote -c ~/Dropbox/.my_notes.db
+    pytakenote -c ~/Dropbox/.my_notes.db
 
 ## Todos
 - Categories
 - Search
 - <del>Use argparse as current arg handling is fugly</del>
 - Simple Encryption?
-- System-wide installation script?
+- <del>System-wide installation script?</del>
