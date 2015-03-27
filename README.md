@@ -2,6 +2,9 @@
 - A simple CLI notetaking app written in Python 3 and SQLite
 - Needed an upgrade from my notes.txt file
 
+## System-wide installation
+- wget -O - https://raw.githubusercontent.com/nakhan98/PyTakeNote/master/installer.sh | sudo sh
+
 ## Instructions
 - Help:
     pytakenote -h
