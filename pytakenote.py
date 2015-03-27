@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-'''
+"""
 # PyTakeNote #
 - A simple CLI notetaking app written in Python 3
 - Needed an upgrade from my notes.txt file
-'''
+"""
 
 __title__ = "PyTakeNote"
 __version__ = "0.3.1" 
@@ -235,7 +235,6 @@ def main(argv):
         note.print_()
     else:
         Note.print_all_notes(db)
-
 
 
 if __name__ == "__main__":
