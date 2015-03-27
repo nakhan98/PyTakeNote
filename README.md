@@ -5,7 +5,7 @@
 ## System-wide installation
 - Download installer.sh and run it using:
     - sudo sh installer.sh
-- Quick menthod:
+- Quick method (one line):
     - wget -O - https://raw.githubusercontent.com/nakhan98/PyTakeNote/master/installer.sh | sudo sh
 
 ## Instructions
