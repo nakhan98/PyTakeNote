@@ -3,7 +3,10 @@
 - Needed an upgrade from my notes.txt file
 
 ## System-wide installation
-- wget -O - https://raw.githubusercontent.com/nakhan98/PyTakeNote/master/installer.sh | sudo sh
+- Download installer.sh and run it using:
+    - sudo sh installer.sh
+- Quick menthod:
+    - wget -O - https://raw.githubusercontent.com/nakhan98/PyTakeNote/master/installer.sh | sudo sh
 
 ## Instructions
 - Help:
